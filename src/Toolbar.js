@@ -11,7 +11,7 @@ class Toolbar extends Component {
   render() {
     return (
     <div className="toolbar">
-      <i onClick={this.saveMe} className="material-icons">save</i>
+      <i title="Save" onClick={this.saveMe} className="material-icons">save</i>
     </div>
     )
   }
