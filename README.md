@@ -1,5 +1,6 @@
-# Getting Started with Create React App
+# jsramverk editor
 
+This repo is build as a part of the course jsramverk at BTH.  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
