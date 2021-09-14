@@ -40,7 +40,7 @@ function App() {
         })
         .then((res) => res.json())
         .then((docs) => {
-            setAllDocs({ docs: docs });
+            setAllDocs({ docs: docs.data });
         });
     }, [setAllDocs]);
 
