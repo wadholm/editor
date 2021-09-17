@@ -4,7 +4,7 @@ import Dropdown from './Dropdown';
 function Toolbar(props) {
 
     return (
-        <div className="toolbar">
+        <div role="toolbar" className="toolbar">
             <i title="New document" onClick={props.newDoc} className="material-icons">note_add</i>
             <Dropdown
                 docID={props.docID} setDocID={props.setDocID}

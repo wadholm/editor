@@ -1,4 +1,5 @@
 # jsramverk editor
+[![Build Status](https://app.travis-ci.com/wadholm/editor.svg?branch=main)](https://app.travis-ci.com/wadholm/editor)
 
 This repo is build as a part of the course jsramverk at BTH.  
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
