@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import socketIOClient from "socket.io-client";
 import Alert from 'react-popup-alert'
 import Header from './components/Header';
 import Toolbar from './components/Toolbar';
 
+// const ENDPOINT = "http://127.0.0.1:1337";
+const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
+const socket = socketIOClient(ENDPOINT);
+
 function App() {
     const editorRef = useRef(null);
-    const [allDocs, setAllDocs] = useState({docs: null});
+    const [allDocs, setAllDocs] = useState(null);
     const [docID, setDocID] = useState(null);
     const [docName, setDocName] = useState(null);
     const [docContent, setDocContent] = useState(null);
@@ -15,6 +20,11 @@ function App() {
         text: 'Your document has been saved!',
         show: false
     })
+    let [data, setData] = useState({
+        _id: "",
+        name: "",
+        html: ""
+    });
 
     function onCloseMessage() {
         setMessage({
@@ -22,7 +32,7 @@ function App() {
             text: '',
             show: false
         })
-    refreshPage();
+    // refreshPage();
     }
   
     function onShowMessage(type, text) {
@@ -40,25 +50,61 @@ function App() {
         })
         .then((res) => res.json())
         .then((docs) => {
-            setAllDocs({ docs: docs.data });
+            setAllDocs(docs.data);
         });
-    }, [setAllDocs]);
+    }, [setAllDocs, data, message, docName]);
 
     const log = () => {
-        if (editorRef.current) {
-            console.log(editorRef.current.getContent().replace(/<[^>]*(>|$)|&nbsp;|&zwnj;|&raquo;|&laquo;|&gt;/g, ' '));
+        if (docID) {
+            setData({
+                _id: docID,
+                name: docName,
+                html: editorRef.current.getContent()
+            });
+
+            socket.emit("update", data);
         }
     };
 
-    function refreshPage() {
-        window.location.reload(true);
-    }
+    // function refreshPage() {
+    //     window.location.reload(true);
+    // }
 
     const newDoc = () => {
         setDocID(null);
         setDocName(null);
         editorRef.current.setContent("");
     };
+
+    useEffect(() => {
+        if (docID) {
+            // let hidden = document.getElementById("hidden-id").value;
+            let doc = allDocs.find(d => d._id === docID);
+            socket.emit("create", doc._id);
+            socket.on("update", (data) => {
+                if (editorRef.current.getContent() !==  data.html) {
+                    editorRef.current.setContent(data.html);
+                    setDocName(docName);
+                }
+            });
+        }
+    }, [docID, docName, allDocs]);
+
+    // const openDoc = () => {
+    //     setTimeout(function () {
+    //         let hidden = document.getElementById("hidden-id").value;
+
+    //         let doc = allDocs.find(d => d._id === hidden);
+
+    //         socket.emit("create", doc._id);
+
+    //         socket.on("update", (data) => {
+    //             if (data.html !== editorRef.current.getContent()) {
+    //                 editorRef.current.setContent(data.html);
+    //             }
+    //         });
+    //     }, 0);
+    // };
 
     const saveDoc = () => {
         const apiUrl = `https://jsramverk-editor-mack20.azurewebsites.net/docs`;
@@ -106,6 +152,7 @@ function App() {
     return (
         <>
         <Header
+            docID={docID} setDocID={setDocID}
             docName={docName} setDocName={setDocName}
         />
         <Alert
@@ -124,10 +171,10 @@ function App() {
             buttonStyles={{}}
         />
         <Toolbar
-            docID={docID} setDocID={setDocID} 
-            docName={docName} setDocName={setDocName} 
-            docContent={docContent} setDocContent={setDocContent} 
-            docs={allDocs.docs}
+            docID={docID} setDocID={setDocID}
+            docName={docName} setDocName={setDocName}
+            docContent={docContent} setDocContent={setDocContent}
+            docs={allDocs}
             printContent={log}
             newDoc={newDoc}
             saveDoc={saveDoc}
@@ -135,6 +182,7 @@ function App() {
         <Editor
             apiKey="ghjg81e9b3or0nb7gu2jzett3idmypu5en8xwqlf948upxya"
             onInit={(evt, editor) => editorRef.current = editor}
+            onKeyUp={log}
             initialValue={docContent}
             init={{
                 height: 500,

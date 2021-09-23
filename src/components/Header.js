@@ -1,7 +1,6 @@
 import React from 'react'
 
-function Header(props) {
-
+const Header = (props) => {
     let name = props.docName || "";
 
     return (

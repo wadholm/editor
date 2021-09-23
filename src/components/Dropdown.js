@@ -13,11 +13,11 @@ const Dropdown = (props) => {
             <div className="dropdown-content">
                 {docs.map((doc) => {
                     return (
-                        <button key={doc._id}  onClick={e => {
+                        <button key={doc._id} onClick={e => {
                             props.setDocID(doc._id);
                             props.setDocName(doc.name)
                             props.setDocContent(doc.content)
-                        }} className="btn" hidden={doc._id}>{doc.name}
+                        }} id={doc._id} className="btn" value={doc._id}>{doc.name}
                         </button>
                     );
                 })}
