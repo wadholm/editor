@@ -32,7 +32,6 @@ function App() {
             text: '',
             show: false
         })
-    // refreshPage();
     }
   
     function onShowMessage(type, text) {
@@ -66,10 +65,6 @@ function App() {
         }
     };
 
-    // function refreshPage() {
-    //     window.location.reload(true);
-    // }
-
     const newDoc = () => {
         setDocID(null);
         setDocName(null);
@@ -78,7 +73,6 @@ function App() {
 
     useEffect(() => {
         if (docID) {
-            // let hidden = document.getElementById("hidden-id").value;
             let doc = allDocs.find(d => d._id === docID);
             socket.emit("create", doc._id);
             socket.on("update", (data) => {
@@ -89,22 +83,6 @@ function App() {
             });
         }
     }, [docID, docName, allDocs]);
-
-    // const openDoc = () => {
-    //     setTimeout(function () {
-    //         let hidden = document.getElementById("hidden-id").value;
-
-    //         let doc = allDocs.find(d => d._id === hidden);
-
-    //         socket.emit("create", doc._id);
-
-    //         socket.on("update", (data) => {
-    //             if (data.html !== editorRef.current.getContent()) {
-    //                 editorRef.current.setContent(data.html);
-    //             }
-    //         });
-    //     }, 0);
-    // };
 
     const saveDoc = () => {
         const apiUrl = `https://jsramverk-editor-mack20.azurewebsites.net/docs`;
