@@ -18,12 +18,12 @@ import App from './App';
 
 // });
 
-test('renders header', () => {
-    render(<App />);
-    const titel = screen.getByText(/Editor/i);
+// test('renders header', () => {
+//     render(<App />);
+//     const titel = screen.getByText(/Editor/i);
 
-    expect(titel).toBeInTheDocument();
-});
+//     expect(titel).toBeInTheDocument();
+// });
 
 test('renders login', () => {
     render(<App />);
@@ -35,13 +35,13 @@ test('renders login', () => {
 
 });
 
-test('get button for login', () => {
-    render(<App />);
+// test('get button for login', () => {
+//     render(<App />);
 
-    const login = screen.getAllByText(/Login/i);
+//     const login = screen.getAllByText(/Login/i);
 
-    expect(login[0]).toBeInTheDocument();
-});
+//     expect(login[0]).toBeInTheDocument();
+// });
 
 // test('gets all documents for drop-down menu', async () => {
 //     const fakeDocs = {

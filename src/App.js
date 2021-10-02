@@ -12,8 +12,8 @@ import { devENDPOINT, prodENDPOINT } from './variables';
 // const ENDPOINT = "http://127.0.0.1:1337";
 // const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
 
-// const ENDPOINT = devENDPOINT;
-const ENDPOINT = prodENDPOINT;
+const ENDPOINT = devENDPOINT;
+// const ENDPOINT = prodENDPOINT;
 
 const socket = socketIOClient(ENDPOINT);
 
