@@ -1,6 +1,6 @@
 {
   "name": "editor",
-  "version": "5.0.1",
+  "version": "5.0.0",
   "private": true,
   "homepage": ".",
   "dependencies": {
@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --detectOpenHandles",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "npm run build && rsync -av --delete build/ mack20@ssh.student.bth.se:www/editor"
   },
