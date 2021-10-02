@@ -21,6 +21,7 @@ code {
 h1 {
   color:rgb(62, 62, 62);
   padding-left: 0.1em;
+  display: inline-block;
 }
 
 .document-name {
@@ -29,10 +30,134 @@ h1 {
   border-radius: 4px;
   outline: none;
   background: transparent;
-  padding: 0.5em;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   line-height: 1;
+}
+
+.document-name>label{
+  padding-left: 5px;
+  padding-right: 5px;
+  position:relative;
+  top: -0.6em;
+  left: 0.4em;
+  background-color:white;
+  font-weight: bold;
+  color: rgb(62, 62, 62);
+}
+
+.document-name>input{
+  border:none;
+}
+
+.document-users {
+  display: block;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  outline: none;
+  background: transparent;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1;
+
+}
+
+.document-users>label{
+  padding-left: 5px;
+  padding-right: 5px;
+  position:relative;
+  top: -0.6em;
+  left: 0.4em;
+  background-color:white;
+  font-weight: bold;
+  color: rgb(62, 62, 62);
+}
+
+.document-users>input{
+  border:none;
+}
+
+.register-field {
+  margin-top: 3em;
+}
+
+.login-container p {
+  text-align: center;
+}
+
+.login {
+  display: block;
+  border: 1px solid #dedede;
+  border-radius: 4px;
+  outline: none;
+  background: transparent;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.login>label{
+  padding-left: 5px;
+  padding-right: 5px;
+  position:relative;
+  top: -0.6em;
+  left: 0.4em;
+  background-color:white;
+  font-weight: bold;
+  color: rgb(62, 62, 62);
+}
+
+.login>input{
+  font-size: 1.2em;
+  display: block;
+  margin: 0 0 0.7em 1em;
+  /* border-radius: 4px;
+  border-color: rgb(190, 190, 190); */
+  border: none;
+  padding: 2px;
+  width: 75%;
+}
+
+.login-container {
+  border-radius: 2%;
+  width: 55%;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  margin: 2em auto;
+}
+
+.login-container h1{
+  text-align: center;
+  display: block;
+}
+
+.login-container button{
+  display: block;
+  margin: auto;
+}
+
+.log {
+  background-color: #2d7cfc;
+  border-radius: 5px;
+  border: none;
+  color: white;
+  padding: 0.8em 1.8em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1em;
+  margin: 1em;
+}
+
+.log:hover {
+  background-color: #2568d2;
+}
+
+.header button {
+  float: right;
+}
+
+.wrapper {
+  padding: 2em;
 }
 
 .toolbar {
@@ -48,10 +173,11 @@ h1 {
 
 input[type=text] {
   border: none;
-  font-size: 1em;
-  font-weight: bold;
-  padding: 0.5em;
-
+  font-size: 1.2em;
+  padding-bottom: 0.5em;
+  margin: 0 0 0 1em;
+  display: block;
+  width: 90%;
 }
 
 input[type=text]:focus {
@@ -113,6 +239,7 @@ button {
   border: none;
 }
 
+
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #ddd;}
 
@@ -121,5 +248,28 @@ button {
 
 .alert-main {
   padding: 0.5em;
+  position: absolute;
+  z-index: 1000;
+  width: 30%;
+  overflow: hidden;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  border-radius: 8px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1em;
+  text-align: center;
+  background-color: #fbfbfb;
+}
+
+.alert-main .material-icons {
+  color: #2d7cfc;
+  font-weight: bold;
+}
+
+.alert-main .material-icons:hover {
+  color: #2568d2;
+  background-color: rgb(224, 224, 224);
+  font-weight: bold;
 }
 

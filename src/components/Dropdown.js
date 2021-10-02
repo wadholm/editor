@@ -17,6 +17,7 @@ const Dropdown = (props) => {
                             props.setDocID(doc._id);
                             props.setDocName(doc.name)
                             props.setDocContent(doc.content)
+                            props.setAllowedUsers(doc.allowed_users.join(", "));
                         }} id={doc._id} className="btn" value={doc._id}>{doc.name}
                         </button>
                     );

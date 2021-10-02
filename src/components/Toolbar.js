@@ -1,5 +1,6 @@
 import React from 'react'
 import Dropdown from './Dropdown';
+import DropdownUsers from './DropdownUsers';
 
 function Toolbar(props) {
 
@@ -11,6 +12,11 @@ function Toolbar(props) {
                 docName={props.docName} setDocName={props.setDocName}
                 docContent={props.docContent} setDocContent={props.setDocContent}
                 docs={props.docs}
+                allowedUsers={props.allowedUsers} setAllowedUsers={props.setAllowedUsers}
+            />
+            <DropdownUsers
+            authUsers={props.authUsers}
+            allowedUsers={props.allowedUsers} setAllowedUsers={props.setAllowedUsers}
             />
             <i title="Save changes" onClick={props.saveDoc} className="material-icons">save</i>
         </div>

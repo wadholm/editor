@@ -3,10 +3,18 @@ import { Editor } from '@tinymce/tinymce-react';
 import socketIOClient from "socket.io-client";
 import Alert from 'react-popup-alert'
 import Header from './components/Header';
+import Login from './components/Login';
 import Toolbar from './components/Toolbar';
+import Axios from "axios";
+// eslint-disable-next-line no-unused-vars
+import { devENDPOINT, prodENDPOINT } from './variables';
 
 // const ENDPOINT = "http://127.0.0.1:1337";
-const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
+// const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
+
+// const ENDPOINT = devENDPOINT;
+const ENDPOINT = prodENDPOINT;
+
 const socket = socketIOClient(ENDPOINT);
 
 function App() {
@@ -15,7 +23,64 @@ function App() {
     const [docID, setDocID] = useState(null);
     const [docName, setDocName] = useState(null);
     const [docContent, setDocContent] = useState(null);
+    const [registerUsername, setRegisterUsername] = useState("");
+    const [registerPassword, setRegisterPassword] = useState("");
+    const [loginUsername, setLoginUsername] = useState("");
+    const [loginPassword, setLoginPassword] = useState("");
+    const [token, setToken] = useState("");
+    const [user, setUser] = useState("");
+    const [registered, setRegistered] = useState("");
+    const [authUsers, setAuthUsers] = useState("");
+    const [allowedUsers, setAllowedUsers] = useState("");
+    const register = () => {
+        Axios({
+            method: "POST",
+            data: {
+                email: registerUsername,
+                password: registerPassword
+            },
+            withCredentials: true,
+            url: `${ENDPOINT}/auth/register`
+        }).then((res) => {
+            console.log(res)
+            if (!res.data) {
+                onShowMessage("Error!", "error", "Something went wrong.");
+            } else {
+                if (res.data.data.title === "Email or password missing.") {
+                    onShowMessage("Warning!", "warning", res.data.data.message);
+                }
+                if (res.data.data.title === "Succesfully created a user.") {
+                    setRegistered(res.data.data.email);
+                    console.log(registered);
+                    onShowMessage("Success!", "success", res.data.data.message);
+                }
+                if (res.data.data.title === "User already exists.") {
+                    onShowMessage("Warning!", "warning", res.data.data.message);
+                }
+            }
+        });
+    };
+    const login = () => {
+        Axios({
+            method: "POST",
+            headers: {'content-type': 'application/json'},
+            data: {
+                email: loginUsername,
+                password: loginPassword
+            },
+            withCredentials: true,
+            url: `${ENDPOINT}/auth/login`
+        }).then((res) => {
+            if (res.data.data.token) {
+                setUser(res.data.data.user.email);
+                setToken(res.data.data.token);
+                onShowMessage("Success!", "success", res.data.data.message);
+            }
+        });
+    };
+
     const [message, setMessage] = useState({
+        title: "Success!",
         type: 'succes',
         text: 'Your document has been saved!',
         show: false
@@ -23,19 +88,22 @@ function App() {
     let [data, setData] = useState({
         _id: "",
         name: "",
-        html: ""
+        html: "",
+        allowed_users: ""
     });
 
     function onCloseMessage() {
         setMessage({
+            title: '',
             type: '',
             text: '',
             show: false
         })
     }
   
-    function onShowMessage(type, text) {
+    function onShowMessage(title, type, text) {
         setMessage({
+            title: title,
             type: type,
             text: text,
             show: true
@@ -43,33 +111,42 @@ function App() {
     }
 
     useEffect(() => {
-        const apiUrl = `https://jsramverk-editor-mack20.azurewebsites.net/docs`;
-        fetch(apiUrl, {
-            method: 'GET',
-        })
-        .then((res) => res.json())
-        .then((docs) => {
-            setAllDocs(docs.data);
-        });
-    }, [setAllDocs, data, message, docName]);
-
-    const log = () => {
-        if (docID) {
-            setData({
-                _id: docID,
-                name: docName,
-                html: editorRef.current.getContent()
+            Axios({
+                method: "GET",
+                headers: {'content-type': 'application/json'},
+                withCredentials: true,
+                url: `${ENDPOINT}/users`
+            }).then((res) => {
+    
+                const authedUsers = [];
+    
+                res.data.data.forEach(user => {
+                    authedUsers.push(user.email);
+                });
+                setAuthUsers(authedUsers);
             });
+      }, [token]);
 
-            socket.emit("update", data);
+    useEffect(() => {
+        if (token) {
+            const apiUrl = `${ENDPOINT}/docs/${user}`;
+            fetch(apiUrl, {
+                method: 'GET',
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                let allowedDocs = [];
+                if (data.data !== null) {
+                    data.data.forEach(doc => {
+                        if (doc.allowed_users.includes(user) === true) {
+                            allowedDocs.push(doc);
+                        }
+                    });
+                }
+                setAllDocs(allowedDocs);
+            });
         }
-    };
-
-    const newDoc = () => {
-        setDocID(null);
-        setDocName(null);
-        editorRef.current.setContent("");
-    };
+    }, [setAllDocs, docName, token, user]);
 
     useEffect(() => {
         if (docID) {
@@ -84,54 +161,115 @@ function App() {
         }
     }, [docID, docName, allDocs]);
 
+    const log = () => {
+        if (docID) {
+            setData({
+                _id: docID,
+                name: docName,
+                html: editorRef.current.getContent(),
+                allowed_users: allowedUsers
+            });
+
+            socket.emit("update", data);
+        }
+    };
+
+    const newDoc = () => {
+        setDocID(null);
+        setDocName(null);
+        setAllowedUsers(null);
+        editorRef.current.setContent("");
+    };
+
     const saveDoc = () => {
-        const apiUrl = `https://jsramverk-editor-mack20.azurewebsites.net/docs`;
+        const addUrl = `${ENDPOINT}/docs/add`;
+        const updateUrl = `${ENDPOINT}/docs/update`
+        let messageTitle = "Success!";
         let messageType = "success";
         let messageText = 'Your document has been saved!';
         // update doc
         if (docID) {
-            fetch(apiUrl, {
+            fetch(updateUrl, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     _id: docID,
+                    email: user,
                     name: docName,
-                    content: editorRef.current.getContent()
+                    content: editorRef.current.getContent(),
+                    allowed_users: allowedUsers
                 }),
             })
             .catch((error) => {
                 console.error('Error:', error);
+                messageTitle = "Error!";
                 messageType = "error"
                 messageText = 'Something went wrong!';
             });
         // create new doc
         } else {
-            fetch(apiUrl, {
-                method: "POST",
+            fetch(addUrl, {
+                method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
+                    email: user,
                     name: docName,
-                    content: editorRef.current.getContent()
+                    content: editorRef.current.getContent(),
+                    allowed_users: allowedUsers
                 }),
             })
             .catch((error) => {
                 console.error('Error:', error);
-                messageType = "error"
+                messageTitle = "Error!";
+                messageType = "error";
                 messageText = 'Something went wrong!';
             });
         }
-        onShowMessage(messageType, messageText);
+        onShowMessage(messageTitle, messageType, messageText);
     }
 
+    if(!token) {
+        return (
+            <>
+            <Alert
+            header={message.title}
+            btnText={<i className="material-icons">close</i>}
+            text={message.text}
+            type={message.type}
+            show={message.show}
+            color={"none"}
+            onClosePress={onCloseMessage}
+            pressCloseOnOutsideClick={true}
+            showBorderBottom={false}
+            alertStyles={{}}
+            headerStyles={{}}
+            textStyles={{}}
+            buttonStyles={{}}
+            />
+            <Login
+            setRegisterUsername={setRegisterUsername}
+            setRegisterPassword={setRegisterPassword}
+            setLoginUsername={setLoginUsername}
+            setLoginPassword={setLoginPassword}
+            login={login}
+            register={register}
+            registered={registered}
+            />
+        </>
+        )
+    }
     return (
         <>
         <Header
             docID={docID} setDocID={setDocID}
             docName={docName} setDocName={setDocName}
+            allowedUsers={allowedUsers} setAllowedUsers={setAllowedUsers}
+            token={token} setToken={setToken}
+            onShowMessage={onShowMessage}
         />
         <Alert
             header={'Success!'}
@@ -152,10 +290,12 @@ function App() {
             docID={docID} setDocID={setDocID}
             docName={docName} setDocName={setDocName}
             docContent={docContent} setDocContent={setDocContent}
+            allowedUsers={allowedUsers} setAllowedUsers={setAllowedUsers}
             docs={allDocs}
             printContent={log}
             newDoc={newDoc}
             saveDoc={saveDoc}
+            authUsers={authUsers}
         />
         <Editor
             apiKey="ghjg81e9b3or0nb7gu2jzett3idmypu5en8xwqlf948upxya"
