@@ -5,6 +5,7 @@ import Alert from 'react-popup-alert'
 import Header from './components/Header';
 import Login from './components/Login';
 import Toolbar from './components/Toolbar';
+import Footer from './components/Footer';
 import Axios from "axios";
 // eslint-disable-next-line no-unused-vars
 import { devENDPOINT, prodENDPOINT } from './variables';
@@ -12,8 +13,8 @@ import { devENDPOINT, prodENDPOINT } from './variables';
 // const ENDPOINT = "http://127.0.0.1:1337";
 // const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
 
-const ENDPOINT = devENDPOINT;
-// const ENDPOINT = prodENDPOINT;
+// const ENDPOINT = devENDPOINT;
+const ENDPOINT = prodENDPOINT;
 
 const socket = socketIOClient(ENDPOINT);
 
@@ -259,6 +260,7 @@ function App() {
             register={register}
             registered={registered}
             />
+            <Footer />
         </>
         )
     }
@@ -317,6 +319,7 @@ function App() {
                 content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
             }}
         />
+        <Footer />
         </>
     );
 }
