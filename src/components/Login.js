@@ -34,7 +34,7 @@ const Login = (props) => {
                     <button className="log" onClick={props.login}>Login</button>
                 </div>
                 <div className="register-field">
-                <p>Don't have an acocunt yet? Register here!</p>
+                <p>Don't have an account yet? Register here!</p>
                     <h1>Register</h1>
                     <div className="login">
                     <label>Email</label>
