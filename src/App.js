@@ -9,11 +9,7 @@ import Axios from "axios";
 // eslint-disable-next-line no-unused-vars
 import { devENDPOINT, prodENDPOINT } from './variables';
 
-// const ENDPOINT = "http://127.0.0.1:1337";
-// const ENDPOINT = "https://jsramverk-editor-mack20.azurewebsites.net";
-
 const ENDPOINT = devENDPOINT;
-// const ENDPOINT = prodENDPOINT;
 
 const socket = socketIOClient(ENDPOINT);
 
@@ -28,7 +24,7 @@ function App() {
     const [loginUsername, setLoginUsername] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [token, setToken] = useState("");
-    const [user, setUser] = useState("");
+    const [currentUser, setCurrentUser] = useState("");
     const [registered, setRegistered] = useState("");
     const [authUsers, setAuthUsers] = useState("");
     const [allowedUsers, setAllowedUsers] = useState("");
@@ -72,7 +68,7 @@ function App() {
             url: `${ENDPOINT}/auth/login`
         }).then((res) => {
             if (res.data.data.token) {
-                setUser(res.data.data.user.email);
+                setCurrentUser(res.data.data.user.email);
                 setToken(res.data.data.token);
                 onShowMessage("Success!", "success", res.data.data.message);
             }
@@ -110,43 +106,47 @@ function App() {
         })
     }
 
-    useEffect(() => {
-            Axios({
-                method: "GET",
-                headers: {'content-type': 'application/json'},
-                withCredentials: true,
-                url: `${ENDPOINT}/users`
-            }).then((res) => {
-    
-                const authedUsers = [];
-    
-                res.data.data.forEach(user => {
-                    authedUsers.push(user.email);
-                });
-                setAuthUsers(authedUsers);
+      useEffect(() => {
+        Axios({
+            method: "POST",
+            url: `${ENDPOINT}/graphql`,
+            data: {
+                query: "{ users { email } }"
+            }
+        }).then((res) => {
+            const authedUsers = [];
+
+            res.data.data.users.forEach(user => {
+                authedUsers.push(user.email);
             });
-      }, [token]);
+            setAuthUsers(authedUsers);
+        });
+    }, [token]);
 
     useEffect(() => {
         if (token) {
-            const apiUrl = `${ENDPOINT}/docs/${user}`;
-            fetch(apiUrl, {
-                method: 'GET',
-            })
-            .then((res) => res.json())
-            .then((data) => {
+            Axios({
+                method: "POST",
+                url: `${ENDPOINT}/graphql`,
+                data: {
+                    query: "{ users { docs { _id name content allowed_users } } }"
+                }
+            }).then((res) => {
                 let allowedDocs = [];
-                if (data.data !== null) {
-                    data.data.forEach(doc => {
-                        if (doc.allowed_users.includes(user) === true) {
-                            allowedDocs.push(doc);
-                        }
+
+                if (res.data.data.users !== null) {
+                    res.data.data.users.forEach(user => {
+                        user.docs.forEach(doc => {
+                            if (doc.allowed_users.includes(currentUser) === true) {
+                                allowedDocs.push(doc);
+                            }
+                        })
                     });
                 }
                 setAllDocs(allowedDocs);
             });
         }
-    }, [setAllDocs, docName, token, user]);
+    }, [setAllDocs, docName, token, currentUser]);
 
     useEffect(() => {
         if (docID) {
@@ -196,7 +196,7 @@ function App() {
                 },
                 body: JSON.stringify({
                     _id: docID,
-                    email: user,
+                    email: currentUser,
                     name: docName,
                     content: editorRef.current.getContent(),
                     allowed_users: allowedUsers
@@ -216,7 +216,7 @@ function App() {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    email: user,
+                    email: currentUser,
                     name: docName,
                     content: editorRef.current.getContent(),
                     allowed_users: allowedUsers
