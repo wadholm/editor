@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react';
 
 const DropdownUsers = (props) => {
-    useEffect(() => {
-        console.info("allowed users updated");
-    }, [props.allowedUsers]);
-
     const { authUsers } = props;
+    const { allowedUsers } = props;
+
+    useEffect(() => {
+        // console.info("allowed users updated");
+    }, [allowedUsers]);
+
     let userArray = [];
+    // console.log(authUsers, allowedUsers);
 
 
-    if (props.allowedUsers) {
-        userArray = props.allowedUsers.split(", ");
+    if (allowedUsers) {
+        userArray = allowedUsers.split(", ");
     }
 
     if (!authUsers || authUsers.length === 0 || userArray.length === authUsers.length) {
@@ -32,7 +35,7 @@ const DropdownUsers = (props) => {
                     if (!userArray || userArray.includes(user) === false) {
                         return (
                             <button key={user} onClick={e => {
-                                let users = props.allowedUsers;
+                                let users = allowedUsers;
                                 if (users == null) {
                                     users = user
                                 } else {
@@ -60,7 +63,7 @@ const DropdownUsers = (props) => {
                 if (!userArray || userArray.includes(user) === false) {
                     return (
                         <button key={user} onClick={e => {
-                            let users = props.allowedUsers;
+                            let users = allowedUsers;
                             if (users == null) {
                                 users = user
                             } else {

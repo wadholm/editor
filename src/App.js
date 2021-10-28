@@ -184,59 +184,72 @@ function App() {
 
     const invite = () => {
         // console.log(docID, codeID);
-        let type = "docs";
-        let id = docID;
-        // let name = "document";
-        // let content = editorRef.current.getContent()
+        let messageTitle;
+        let messageText;
 
-        if (codeMode) {
-            type = "codes";
-            id = codeID;
-            // name = "code";
-            // content = codeEditorRef.current.getValue();
+        if (docID || codeID) {
+            let type = "docs";
+            let id = docID;
+            // let name = "document";
+            // let content = editorRef.current.getContent()
+    
+            if (codeMode) {
+                type = "codes";
+                id = codeID;
+                // name = "code";
+                // content = codeEditorRef.current.getValue();
+            }
+            const addAllowedUserUrl = `${ENDPOINT}/${type}/add/allowed_user`
+            const sendEvite = `${ENDPOINT}/sendmail`
+
+            messageTitle = "Success!";
+            messageText = 'Invite has been sent!';
+    
+            fetch(addAllowedUserUrl, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    _id: id,
+                    new_user: sendEmail,
+                }),
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                messageTitle = "Error!";
+                // messageType = "error"
+                messageText = 'Something went wrong!';
+            });
+    
+            fetch(sendEvite, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    recipient: sendEmail,
+                    sender: currentUser,
+                }),
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                messageTitle = "Error!";
+                // messageType = "error"
+                messageText = 'Something went wrong!';
+            });
+            // showMessage(messageTitle, messageText);
+            // showMessage(messageTitle, messageType, messageText);
+            setSendEmail("");
+
+        } else {
+            messageTitle = "Warning!";
+            messageText = 'You must save document before you can share it!';
+            // showMessage(messageTitle, messageText);
         }
-        const addAllowedUserUrl = `${ENDPOINT}/${type}/add/allowed_user`
-        const sendEvite = `${ENDPOINT}/sendmail`
-        let messageTitle = "Success!";
-        // let messageType = "success";
-        let messageText = 'Invite has been sent!';
-
-        fetch(addAllowedUserUrl, {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                _id: id,
-                new_user: sendEmail,
-            }),
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            messageTitle = "Error!";
-            // messageType = "error"
-            messageText = 'Something went wrong!';
-        });
-
-        fetch(sendEvite, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                recipient: sendEmail,
-                sender: currentUser,
-            }),
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            messageTitle = "Error!";
-            // messageType = "error"
-            messageText = 'Something went wrong!';
-        });
         showMessage(messageTitle, messageText);
         // showMessage(messageTitle, messageType, messageText);
-        setSendEmail("");
+        // setSendEmail("");
     };
 
     function showMessage(messageTitle, messageText) {

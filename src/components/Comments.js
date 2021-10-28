@@ -13,26 +13,26 @@ const Comments = (props) => {
             props.setUpdateMode(true);
             props.setComment(comment);
             setCurrentComment(comment);
+            console.log(comment);
         }
     }
 
-    let editorArea = document.getElementsByClassName("tox-edit-area");
+    // let editorArea = document.getElementsByClassName("tox-edit-area");
     let comments;
-
-    // let editorDocument = editorArea[0].childNodes[0].contentDocument;
-    // comments = editorDocument.getElementsByClassName("user-comments");
 
     useEffect(() => {
         // console.log(comments);
     }, [comments]);
 
     if (props.displayComments) {
-        let editorDocument = editorArea[0].childNodes[0].contentDocument;
+        let editorArea = document.getElementsByClassName("tox-edit-area");
+        let editorDocument;
+        if (process.env.NODE_ENV === 'test') {
+            editorDocument = document.body;
+        } else {
+            editorDocument = editorArea[0].childNodes[0].contentDocument;
+        }
         comments = editorDocument.getElementsByClassName("user-comments");
-
-        // useEffect(() => {
-        //     console.log(comments);
-        // }, [comments]);
 
         if (props.updateMode && comments.length > 0) {
             return (

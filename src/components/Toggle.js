@@ -15,7 +15,7 @@ const Toggle = (props) => {
 
     return (
         <>
-        <div className="toggle">
+        <div data-testid="toggle" className="toggle">
         <label className="switch switch-flat">
         	<input className="switch-input" type="checkbox" onClick={toggleMode}/>
         	<span className="switch-label" data-on="Codemode On" data-off="Codemode Off"></span> 

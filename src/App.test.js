@@ -8,17 +8,17 @@ import App from './App';
 test('renders login', () => {
     render(<App />);
     const titel = screen.getByText(/Editor/i);
-    const inputEmail = screen.getAllByText(/Email/i);
-    const inputPassword = screen.getAllByText(/Password/i);
     const login = screen.getAllByText(/Login/i);
     const register = screen.getAllByText(/Register/i);
+    const footer = screen.getByText("© Malin Wadholm 2021");
+
+
 
 
     expect(titel).toBeInTheDocument();
-    expect(inputEmail[0]).toBeInTheDocument();
-    expect(inputPassword[0]).toBeInTheDocument();
     expect(login[0]).toBeInTheDocument();
     expect(register[0]).toBeInTheDocument();
+    expect(footer).toBeInTheDocument();
 
 });
 

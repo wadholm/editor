@@ -78,6 +78,7 @@ function Toolbar(props) {
         <>
         <div role="toolbar" className="toolbar field">
             <i title="New document" onClick={createNew} className="material-icons">note_add</i>
+            <i title="Save changes" onClick={props.saveDoc} className="material-icons">save</i>
             <Dropdown
                 newDoc={props.newDoc}
                 docID={props.docID} setDocID={props.setDocID}
@@ -98,7 +99,6 @@ function Toolbar(props) {
             authUsers={props.authUsers}
             allowedUsers={props.allowedUsers} setAllowedUsers={props.setAllowedUsers}
             />
-            <i title="Save changes" onClick={props.saveDoc} className="material-icons">save</i>
             <i title="Send invite" onClick={showInvite} className="material-icons">email</i>
             <Switch
             codeMode={props.codeMode}
@@ -141,7 +141,7 @@ function Toolbar(props) {
                                 props.setSendEmail(e.target.value);
                             }}
                         />
-            <i title="Send invite" onClick={sendInvite} className="material-icons">send</i>
+            <i title="Send" onClick={sendInvite} className="material-icons">send</i>
             </div>
             </div>
         </>
