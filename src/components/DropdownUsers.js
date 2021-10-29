@@ -18,9 +18,11 @@ const DropdownUsers = (props) => {
 
     if (!authUsers || authUsers.length === 0 || userArray.length === authUsers.length) {
         return (
+            <div className="dropdown">
             <button className="dropbtn">
             <i style={{cursor: "not-allowed"}} title="No users available" className="material-icons">group_add</i>
             </button>
+            </div>
             );
     }
 

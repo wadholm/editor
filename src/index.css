@@ -722,7 +722,7 @@ button {
   height: 498px;
   /* box-shadow: 0 8px 16px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%); */
   top: 516px;
-  left: 90%;
+  left: 88%;
   transform: translate(-50%, -50%);
   /* padding: 1em; */
   /* text-align: center; */
@@ -740,6 +740,7 @@ button {
 
 .comments-title {
   border-bottom: 1px solid #cfcfcf;
+  margin-bottom: 0.5em;
 }
 
 .comments-wrapper {

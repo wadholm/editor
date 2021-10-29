@@ -13,11 +13,9 @@ const Comments = (props) => {
             props.setUpdateMode(true);
             props.setComment(comment);
             setCurrentComment(comment);
-            console.log(comment);
         }
     }
 
-    // let editorArea = document.getElementsByClassName("tox-edit-area");
     let comments;
 
     useEffect(() => {
@@ -54,7 +52,6 @@ const Comments = (props) => {
                             placeholder="Update comment"
                             value={props.comment}
                             onChange={e => {
-                                // console.log(e.target.value);
                                 props.setComment(e.target.value);
                             }}
                             />
@@ -62,19 +59,16 @@ const Comments = (props) => {
                         <p id={comment.id}>{comment.dataset.user}</p>
                         <div className="btn-wrapper">
                             <button onClick={e => {
-                                // console.log(e.target.value);
                                 setUpdateComment(e.target.value);
                             }} id={comment.id} className="comment-btn" value={comment.dataset.comment}>Update comment
                             </button>
                             <button onClick={e => {
-                            // console.log(e.target.value)
                             props.updateComment(e.target.value);
                             // props.setUpdateMode(false);
                             props.setComment("");
                             }} id={comment.id} className="comment-btn" value={comment.id}>Save changes
                             </button>
                             <button onClick={e => {
-                            // console.log(e.target.value)
                             props.removeComment(e.target.value);
                             }} id={comment.id} className="comment-btn reverse" value={comment.id}>Delete comment
                             </button>
@@ -91,12 +85,10 @@ const Comments = (props) => {
                     <p id={comment.id}>{comment.dataset.user}</p>
                     <div className="btn-wrapper">
                         <button onClick={e => {
-                            // console.log(e.target.value)
                             setUpdateComment(e.target.value);
                         }} id={comment.id} className="comment-btn" value={comment.dataset.comment}>Update comment
                         </button>
                         <button onClick={e => {
-                        // console.log(e.target.value)
                         props.removeComment(e.target.value);
                         }} id={comment.id} className="comment-btn reverse" value={comment.id}>Delete comment
                         </button>
@@ -125,12 +117,10 @@ const Comments = (props) => {
                     <p id={comment.id}>{comment.dataset.user}</p>
                     <div className="btn-wrapper">
                         <button onClick={e => {
-                            // console.log(e.target.value)
                             setUpdateComment(e.target.value);
                         }} id={comment.id} className="comment-btn" value={comment.dataset.comment}>Update comment
                         </button>
                         <button onClick={e => {
-                        // console.log(e.target.value)
                         props.removeComment(e.target.value);
                         }} id={comment.id} className="comment-btn reverse" value={comment.id}>Delete comment
                         </button>

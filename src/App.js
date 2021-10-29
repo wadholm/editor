@@ -32,13 +32,10 @@ function App() {
     const [codeContent, setCodeContent] = useState(null);
     const [registerUsername, setRegisterUsername] = useState("");
     const [registerPassword, setRegisterPassword] = useState("");
-    // const [autofillUsername, setAutofillUsername] = useState("");
-    // const [autofillPassword, setAutofillPassword] = useState("");
     const [loginUsername, setLoginUsername] = useState("");
     const [loginPassword, setLoginPassword] = useState("");
     const [token, setToken] = useState("");
     const [currentUser, setCurrentUser] = useState("");
-    // const [registered, setRegistered] = useState("");
     const [authUsers, setAuthUsers] = useState("");
     const [allowedUsers, setAllowedUsers] = useState(null);
     const [sendEmail, setSendEmail] = useState("");
@@ -95,51 +92,22 @@ function App() {
         }).then((res) => {
             if (!res.data) {
                 showMessage("Error!", "Something went wrong.");
-                // setMessage({
-                //     title: "Error!",
-                //     text: "Something went wrong."
-                // });
-                // setAlertStyle({display: "block"});
             } else {
                 if (res.data.data.title === "Email or password missing.") {
-                    // showMessage("Warning!", "warning", res.data.data.message);
-                    // setMessage({
-                    //     title: "Warning!",
-                    //     text: res.data.data.message
-                    // });
-                    // setAlertStyle({display: "block"});
                     showMessage("Warning", res.data.data.message)
-                    // setAutofillUsername("");
-                    // setAutofillPassword("");
                 }
                 if (res.data.data.title === "Succesfully created a user.") {
-                    // setRegistered(res.data.data.email);
                     setLoginUsername(registerUsername);
                     setLoginPassword(registerPassword);
                     showMessage("Success!", res.data.data.message);
-                    // setMessage({
-                    //     title: "Success!",
-                    //     text: res.data.data.message
-                    // });
-                    // setAlertStyle({display: "block"});
                 }
                 if (res.data.data.title === "User already exists.") {
                     showMessage("Warning!", res.data.data.message);
-                    // setMessage({
-                    //     title: "Warning!",
-                    //     text: res.data.data.message
-                    // });
-                    // setAlertStyle({display: "block"});
                 }
             }
         }) 
         .catch((error) => {
             console.error(error);
-            // setMessage({
-            //     title: "Warning!",
-            //     text: "Something went wrong."
-            // });
-            // setAlertStyle({display: "block"});
             showMessage("Warning!", "Something went wrong.");
         });
         setEviteEmail("");
@@ -147,8 +115,6 @@ function App() {
     };
 
     const login = () => {
-        // setAutofillUsername("");
-        // setAutofillPassword("");
         Axios({
             method: "POST",
             headers: {'content-type': 'application/json'},
@@ -162,42 +128,27 @@ function App() {
             if (res.data.data.token) {
                 setCurrentUser(res.data.data.user.email);
                 setToken(res.data.data.token);
-                // showMessage("Success!", res.data.data.message);
-                setMessage({
-                    title: "Success!",
-                    text: res.data.data.message
-                });
-                setAlertStyle({display: "block"});
+                showMessage("Success!", res.data.data.message);
             }
         })
         .catch((error) => {
             console.error(error);
-            // setMessage({
-            //     title: "Warning!",
-            //     text: "Something went wrong."
-            // });
-            // setAlertStyle({display: "block"});
             showMessage("Warning!", "Something went wrong.");
         })
         ;
     };
 
     const invite = () => {
-        // console.log(docID, codeID);
         let messageTitle;
         let messageText;
 
         if (docID || codeID) {
             let type = "docs";
             let id = docID;
-            // let name = "document";
-            // let content = editorRef.current.getContent()
     
             if (codeMode) {
                 type = "codes";
                 id = codeID;
-                // name = "code";
-                // content = codeEditorRef.current.getValue();
             }
             const addAllowedUserUrl = `${ENDPOINT}/${type}/add/allowed_user`
             const sendEvite = `${ENDPOINT}/sendmail`
@@ -218,7 +169,6 @@ function App() {
             .catch((error) => {
                 console.error('Error:', error);
                 messageTitle = "Error!";
-                // messageType = "error"
                 messageText = 'Something went wrong!';
             });
     
@@ -235,21 +185,15 @@ function App() {
             .catch((error) => {
                 console.error('Error:', error);
                 messageTitle = "Error!";
-                // messageType = "error"
                 messageText = 'Something went wrong!';
             });
-            // showMessage(messageTitle, messageText);
-            // showMessage(messageTitle, messageType, messageText);
             setSendEmail("");
 
         } else {
             messageTitle = "Warning!";
             messageText = 'You must save document before you can share it!';
-            // showMessage(messageTitle, messageText);
         }
         showMessage(messageTitle, messageText);
-        // showMessage(messageTitle, messageType, messageText);
-        // setSendEmail("");
     };
 
     function showMessage(messageTitle, messageText) {
@@ -332,7 +276,7 @@ function App() {
                 console.error(error);
             });
         }
-    }, [setAllCodes, docName, codeMode, currentUser]);
+    }, [setAllCodes, docName, codeMode, token, currentUser]);
 
     useEffect(() => {
         if (docID) {
@@ -348,7 +292,6 @@ function App() {
     }, [docID, docName, allDocs, data]);
 
     const log = () => {
-        // console.log(editorRef.current.getContent());
         if (docID) {
             setData({
                 _id: docID,
@@ -362,24 +305,9 @@ function App() {
     };
 
     const addComment = () => {
-        // let editorArea = document.getElementsByClassName("tox-edit-area");
-        // let editorDocument = editorArea[0].childNodes[0].contentDocument;
-        // console.log(editorDocument);
-
-        // let span = document.createElement("span");
-        // span.classList.add("user-comments");
-        // span.id = "span id";
-        // span.dataset.comment = comment;
-
         if (document.getSelection) {
             let editorArea = document.getElementsByClassName("tox-edit-area");
             let editorDocument = editorArea[0].childNodes[0].contentDocument;
-            // console.log(editorDocument);
-    
-            // let span = document.createElement("span");
-            // span.classList.add("user-comments");
-            // span.id = "span id";
-            // span.dataset.comment = comment;
 
             let selectedText = editorDocument.getSelection();
             if (selectedText.anchorOffset !== selectedText.focusOffset) {
@@ -398,21 +326,24 @@ function App() {
                     selectedText.removeAllRanges();
                     selectedText.addRange(range);
                 }
-                setMessage({
-                    title: "Success!",
-                    text: "Your comment has been added."
-                });
-                setAlertStyle({display: "block"});
+                // setMessage({
+                //     title: "Success!",
+                //     text: "Your comment has been added."
+                // });
+                // setAlertStyle({display: "block"});
+                showMessage("Success!!", "Your comment has been added.");
+
                 setCommentStyle({display: "none"});
                 setComment("");
 
             } else if (selectedText.anchorOffset === selectedText.focusOffset) {
                 // nothing selected
-                setMessage({
-                    title: "Warning!",
-                    text: "No text selected."
-                });
-                setAlertStyle({display: "block"});
+                // setMessage({
+                //     title: "Warning!",
+                //     text: "No text selected."
+                // });
+                // setAlertStyle({display: "block"});
+                showMessage("Warning!", "No text selected.");
             }
         }
     }
@@ -422,14 +353,12 @@ function App() {
         let editorArea = document.getElementsByClassName("tox-edit-area");
         let editorDocument = editorArea[0].childNodes[0].contentDocument;
         let el = editorDocument.getElementById(id);
-        // var el = document.getElementById('span id');
 
         // get the element's parent node
         var parent = el.parentNode;
 
         // move all children out of the element
         while (el.firstChild) parent.insertBefore(el.firstChild, el);
-        // console.log(el.firstChild);
 
         // remove the empty element
         parent.removeChild(el);
@@ -442,23 +371,11 @@ function App() {
     }
 
     const updateComment = (id) => {
-        // select element to unwrap
         let editorArea = document.getElementsByClassName("tox-edit-area");
         let editorDocument = editorArea[0].childNodes[0].contentDocument;
         let el = editorDocument.getElementById(id);
         el.dataset.comment = comment;
         saveDoc();
-        // var el = document.getElementById('span id');
-
-        // get the element's parent node
-        // var parent = el.parentNode;
-
-        // // move all children out of the element
-        // while (el.firstChild) parent.insertBefore(el.firstChild, el);
-        // // console.log(el.firstChild);
-
-        // // remove the empty element
-        // parent.removeChild(el);
     }
 
     const newDoc = () => {
@@ -476,7 +393,6 @@ function App() {
     };
 
     const saveDoc = async() => {
-        // console.log(docID, codeID);
         let type = "docs";
         let id = docID;
         let name = "document";
@@ -492,8 +408,8 @@ function App() {
         const addUrl = `${ENDPOINT}/${type}/add`;
         const updateUrl = `${ENDPOINT}/${type}/update`
         let messageTitle = "Success!";
-        // let messageType = "success";
         let messageText = `Your ${name} has been saved!`;
+
         // update doc
         if (id) {
             fetch(updateUrl, {
@@ -512,7 +428,6 @@ function App() {
             .catch((error) => {
                 console.error('Error:', error);
                 messageTitle = "Error!";
-                // messageType = "error"
                 messageText = 'Something went wrong!';
             });
         // create new doc
@@ -531,8 +446,7 @@ function App() {
             })
             .catch((error) => {
                 console.error('Error:', error);
-                messageTitle = "Error!";
-                // messageType = "error";
+                messageTitle = "Error!";;
                 messageText = 'Something went wrong!';
             });
         }
@@ -545,7 +459,6 @@ function App() {
             setDeleteMode(false);
         }
         showMessage(messageTitle, messageText);
-        // showMessage(messageTitle, messageType, messageText);
     }
 
 
@@ -556,9 +469,7 @@ function App() {
         input.setAttribute("id", "input");
 
         input.innerHTML = editorRef.current.getContent();
-        // input.style.fontFamily = "Helvetica, sans-serif";
         input.style.margin = "20%";
-        // console.log(input);
 
         root.appendChild(input);
 
@@ -602,7 +513,6 @@ function App() {
         .then(function(result) {
             let decodedOutput = atob(result.data);
             setExecCode(decodedOutput);
-            // console.log(decodedOutput); // outputs: decoded response
         });
     };
 
@@ -620,10 +530,8 @@ function App() {
             loginPassword={loginPassword} setLoginPassword={setLoginPassword}
             login={login}
             register={register}
-            // registered={registered}
             eviteEmail={eviteEmail} setEviteEmail={setEviteEmail}
             evitePassword={evitePassword} setEvitePassword={setEvitePassword}
-            // autofillUsername={autofillUsername} autofillPassword={autofillPassword}
             />
             <Footer />
         </>
@@ -681,7 +589,6 @@ function App() {
                 addComment={addComment} removeComment={removeComment}
                 commentStyle={commentStyle} setCommentStyle={setCommentStyle}
                 commentsStyle={commentsStyle} setCommentsStyle={setCommentsStyle}
-                // getComments={getComments}
                 displayComments={displayComments} setDisplayComments={setDisplayComments}
             />
             <CodeEditor
@@ -740,7 +647,6 @@ function App() {
             addComment={addComment} removeComment={removeComment}
             commentStyle={commentStyle} setCommentStyle={setCommentStyle}
             commentsStyle={commentsStyle} setCommentsStyle={setCommentsStyle}
-            // getComments={getComments}
             displayComments={displayComments} setDisplayComments={setDisplayComments}
         />
         <Editor

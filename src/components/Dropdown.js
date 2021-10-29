@@ -11,9 +11,11 @@ const Dropdown = (props) => {
     );
 
     if (props.codeMode && (!codes || codes.length === 0)) return (
-        <button className="dropbtn">
-        <i style={{cursor: "not-allowed"}} title="No codes available" className="material-icons">folder_open</i>
+        <div className="dropdown">
+        <button className="dark-dropbtn">
+        <i style={{cursor: "not-allowed"}} title="No codes available" className="material-icons dark-material-icons">folder_open</i>
         </button>
+        </div>
         );
 
     if (props.codeMode) {
