@@ -69,8 +69,9 @@ function App() {
         allowed_users: ""
     });
 
-    const paramsString = window.location.pathname.substring(1);
-    let searchParams = new URLSearchParams(paramsString);
+    const paramString = window.location.search;
+    
+    let searchParams = new URLSearchParams(paramString);
     let start = "";
 
     if (searchParams.has('register') === true) {
@@ -326,11 +327,6 @@ function App() {
                     selectedText.removeAllRanges();
                     selectedText.addRange(range);
                 }
-                // setMessage({
-                //     title: "Success!",
-                //     text: "Your comment has been added."
-                // });
-                // setAlertStyle({display: "block"});
                 showMessage("Success!!", "Your comment has been added.");
 
                 setCommentStyle({display: "none"});
@@ -338,11 +334,6 @@ function App() {
 
             } else if (selectedText.anchorOffset === selectedText.focusOffset) {
                 // nothing selected
-                // setMessage({
-                //     title: "Warning!",
-                //     text: "No text selected."
-                // });
-                // setAlertStyle({display: "block"});
                 showMessage("Warning!", "No text selected.");
             }
         }
